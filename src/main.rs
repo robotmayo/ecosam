@@ -3,24 +3,31 @@ pub struct Tile {
     weather: i32
 }
 
-fn main() {
-    let world = gen_world(5);
-    for y in world{
-        for x in y{
-            print!("{} ", x.food);
+pub struct World {
+    tiles: Vec<Tile>,
+    height: usize,
+    width: usize
+}
+
+impl World {
+    fn new(h: usize, w: usize) -> World {
+        World {
+            tiles: (0..(h * w)).map(|_| {
+                Tile {
+                    food: 20,
+                    weather: 1
+                }
+            }).collect::<Vec<_>>(),
+            height: h,
+            width: w
         }
-        println!("");
+    }
+    fn getTile(&self, x: usize, y: usize) -> &Tile {
+        return &self.tiles[x * (self.height - 1) + y];
     }
 }
 
-fn gen_world(size: i32) -> Vec<Vec<Tile>> {
-    let mut outer_vec = vec![];
-    for i in 1..size{
-        let mut inner = vec![];
-        for j in 1..size{
-            inner.push(Tile {food : 20, weather : 1});
-        }
-        outer_vec.push(inner)
-    }
-    return outer_vec
+fn main() {
+    let world = World::new(5, 5);
+    println!("{}", world.getTile(1, 2).food);
 }
